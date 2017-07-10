@@ -32,7 +32,7 @@ class LinkAdapter
      *
      * @return string
      */
-    public function getModuleLink($module, $controller, array $params = array())
+    public function getModuleLink($module, $controller, array $params = [])
     {
         return \Context::getContext()->link->getModuleLink($module, $controller, $params, true);
     }

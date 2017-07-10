@@ -24,6 +24,7 @@ use Invertus\Dibs\Payment\PaymentRefundRequest;
 use Invertus\Dibs\Repository\OrderPaymentRepository;
 use Invertus\Dibs\Service\PaymentService;
 use Order;
+use PrestaShopCollection;
 
 /**
  * Class PaymentRefundAction
@@ -140,7 +141,7 @@ class PaymentRefundAction extends AbstractAction
         $refundRequest->setChargeId($orderPayment->id_charge);
 
         $idOrderDetails = array_keys($refundDetails);
-        $collection = new \Collection('OrderDetail');
+        $collection = new PrestaShopCollection('OrderDetail');
         $collection->where('id_order_detail', 'in', $idOrderDetails);
         $orderDetails = $collection->getResults();
         $totalAmount = 0;
@@ -203,11 +204,11 @@ class PaymentRefundAction extends AbstractAction
      */
     public function refundPayments(array $idOrders)
     {
-        $collection = new \Collection('Order');
+        $collection = new PrestaShopCollection('Order');
         $collection->where('id_order', 'in', $idOrders);
         $orders = $collection->getResults();
 
-        $result = array();
+        $result = [];
         $success = false;
 
         /** @var Order $order */

@@ -124,11 +124,11 @@ class PaymentChargeAction extends AbstractAction
      */
     public function chargePayments(array $idOrders)
     {
-        $collection = new \Collection('Order');
+        $collection = new \PrestashopCollection('Order');
         $collection->where('id_order', 'in', $idOrders);
         $orders = $collection->getResults();
 
-        $result = array();
+        $result = [];
         $success = false;
 
         /** @var Order $order */

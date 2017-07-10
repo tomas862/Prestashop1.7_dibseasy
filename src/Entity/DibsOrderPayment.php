@@ -67,21 +67,21 @@ class DibsOrderPayment extends ObjectModel
     /**
      * @var array
      */
-    public static $definition = array(
+    public static $definition = [
         'primary' => 'id_dibs_payment',
         'table' => 'dibs_payment',
-        'fields' => array(
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'id_cart' => array('type' => self::TYPE_INT, 'required' => 1, 'validate' => 'isUnsignedInt'),
-            'id_payment' => array('type' => self::TYPE_STRING, 'required' => 1),
-            'id_charge' => array('type' => self::TYPE_STRING,),
-            'is_canceled' => array('type' => self::TYPE_BOOL),
-            'is_charged' => array('type' => self::TYPE_BOOL),
-            'is_refunded' => array('type' => self::TYPE_BOOL),
-            'is_reserved' => array('type' => self::TYPE_BOOL),
-            'is_partially_refunded' => array('type' => self::TYPE_BOOL),
-        ),
-    );
+        'fields' => [
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_cart' => ['type' => self::TYPE_INT, 'required' => 1, 'validate' => 'isUnsignedInt'],
+            'id_payment' => ['type' => self::TYPE_STRING, 'required' => 1],
+            'id_charge' => ['type' => self::TYPE_STRING,],
+            'is_canceled' => ['type' => self::TYPE_BOOL],
+            'is_charged' => ['type' => self::TYPE_BOOL],
+            'is_refunded' => ['type' => self::TYPE_BOOL],
+            'is_reserved' => ['type' => self::TYPE_BOOL],
+            'is_partially_refunded' => ['type' => self::TYPE_BOOL],
+        ],
+    ];
 
     /**
      * Check if payment can be canceled

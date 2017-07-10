@@ -254,7 +254,7 @@ class Installer
      */
     protected function installDatabase()
     {
-        $sqlStatements = $this->getSqlStatements($this->module->getLocalPath().'sql/install.sql');
+        $sqlStatements = $this->getSqlStatements($this->module->getLocalPath().'etc/sql/install.sql');
 
         return $this->db->execute($sqlStatements);
     }
@@ -266,7 +266,7 @@ class Installer
      */
     protected function uninstallDatabase()
     {
-        $sqlStatements = $this->getSqlStatements($this->module->getLocalPath().'sql/uninstall.sql');
+        $sqlStatements = $this->getSqlStatements($this->module->getLocalPath().'etc/sql/uninstall.sql');
 
         return $this->db->execute($sqlStatements);
     }

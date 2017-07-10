@@ -31,7 +31,7 @@ class PaymentChargeRequest
     /**
      * @var PaymentItem[]|array
      */
-    private $items = array();
+    private $items = [];
 
     /**
      * @var string Payment ID to charge
@@ -75,12 +75,12 @@ class PaymentChargeRequest
      */
     public function toArray()
     {
-        return array(
+        return [
             'amount' => $this->getAmount(),
             'orderItems' => array_map(function (PaymentItem $item) {
                 return $item->toArray();
             }, $this->getItems())
-        );
+        ];
     }
 
     /**

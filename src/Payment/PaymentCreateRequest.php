@@ -26,7 +26,7 @@ class PaymentCreateRequest
     /**
      * @var PaymentItem[]
      */
-    private $items = array();
+    private $items = [];
 
     /**
      * @var int Total amount of order including TAX in cents
@@ -47,6 +47,27 @@ class PaymentCreateRequest
      * @var string URL of the checkout, needed when creating payment
      */
     private $url;
+
+    /**
+     * @var array|string[] 3-letter country codes
+     */
+    private $shippingCountries = [];
+
+    /**
+     * @param string $country 3-letter country code
+     */
+    public function addShippingCountry($country)
+    {
+        $this->shippingCountries[] = $country;
+    }
+
+    /**
+     * @param array|string[] $countries
+     */
+    public function setShippingCountries(array $countries)
+    {
+        $this->shippingCountries = $countries;
+    }
 
     /**
      * @return PaymentItem[]
@@ -142,19 +163,25 @@ class PaymentCreateRequest
      */
     public function toArray()
     {
-        $orderArray = array(
-            'order' => array(
+        $orderArray = [
+            'order' => [
                 'amount' => $this->getAmount(),
                 'currency' => $this->getCurrency(),
                 'reference' => $this->getReference(),
                 'items' => array_map(function (PaymentItem $item) {
                     return $item->toArray();
                 }, $this->getItems()),
-            ),
-            'checkout' => array(
+            ],
+            'checkout' => [
                 'url' => $this->getUrl(),
-            ),
-        );
+            ],
+        ];
+
+        if (count($this->shippingCountries)) {
+            $orderArray['checkout']['ShippingCountries'] = array_map(function($countryCode) {
+                return ['countryCode' => $countryCode];
+            }, $this->shippingCountries);
+        }
 
         return $orderArray;
     }

@@ -17,9 +17,7 @@
 namespace Invertus\Dibs\Service;
 
 use Exception;
-use Guzzle\Http\ClientInterface;
-use Guzzle\Http\Exception\ServerErrorResponseException;
-use Guzzle\Stream\StreamInterface;
+use GuzzleHttp\ClientInterface;
 use Invertus\Dibs\Adapter\ToolsAdapter;
 
 /**
@@ -59,13 +57,12 @@ class ApiRequest
      *
      * @return ApiResponse
      */
-    public function get($url, $params = array())
+    public function get($url, $params = [])
     {
         $apiResponse = new ApiResponse();
 
         try {
-            $request = $this->client->get($url, array(), $params);
-            $response = $request->send();
+            $response = $this->client->get($url, $params);
 
             $body = $response->getBody()->__toString();
             $body = $this->toolsAdapter->jsonDecode($body);
@@ -86,22 +83,18 @@ class ApiRequest
      *
      * @return ApiResponse
      */
-    public function post($url, $params = array())
+    public function post($url, $params = [])
     {
         $apiResponse = new ApiResponse();
 
         try {
-            $request = $this->client->post($url, array(), $params);
-            $response = $request->send();
+            $response = $this->client->post($url, ['body' => $params]);
 
             $body = $response->getBody()->__toString();
             $body = $this->toolsAdapter->jsonDecode($body);
 
             $apiResponse->setStatusCode($response->getStatusCode());
-            $apiResponse->setBody(is_array($body) ? $body : array());
-        } catch (ServerErrorResponseException $e) {
-            $response = $e->getResponse();
-            $apiResponse->setStatusCode($response->getStatusCode());
+            $apiResponse->setBody(is_array($body) ? $body : []);
         } catch (Exception $e) {
         }
 

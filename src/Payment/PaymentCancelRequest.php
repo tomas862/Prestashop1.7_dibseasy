@@ -101,11 +101,11 @@ class PaymentCancelRequest
      */
     public function toArray()
     {
-        return array(
+        return [
             'amount' => $this->getAmount(),
             'orderItems' => array_map(function (PaymentItem $item) {
                 return $item->toArray();
             }, $this->getItems())
-        );
+        ];
     }
 }

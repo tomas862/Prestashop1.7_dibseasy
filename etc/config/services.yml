@@ -39,7 +39,7 @@ services:
             - '%api_prod_url%'
 
     dibs.http_client:
-        class: 'Guzzle\Http\Client'
+        class: 'GuzzleHttp\Client'
         factory: 'dibs.service.client_factory:createNew'
 
     dibs.service.api_request:
@@ -91,6 +91,7 @@ services:
             - '@dibs.service.payment'
             - '@dibs.adapter.link'
             - '@dibs.module'
+            - '%supported_countries%'
 
     dibs.action.payment_get:
         class: 'Invertus\Dibs\Action\PaymentGetAction'

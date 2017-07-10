@@ -1,4 +1,6 @@
 <?php
+use Invertus\Dibs\Result\Payment;
+
 /**
  * 2016 - 2017 Invertus, UAB
  *
@@ -61,16 +63,16 @@ class DibsValidationModuleFrontController extends ModuleFrontController
         $orderPaymentRepository = $this->module->get('dibs.repository.order_payment');
         $orderPayment = $orderPaymentRepository->findOrderPaymentByCartId($this->context->cart->id);
         if (!$orderPayment instanceof DibsOrderPayment) {
-            $this->addFlash('error', $this->module->l('Unexpected error occured.', self::FILENAME));
-            Tools::redirect($this->context->link->getModuleLink($this->module->name, 'checkout'));
+            $this->errors[] = $this->module->l('Unexpected error occured.', self::FILENAME);
+            $this->redirectWithNotifications($this->context->link->getModuleLink($this->module->name, 'checkout'));
         }
 
         // Before creating order let's make some validations
         // First let's check if paid amount and currency is the same as it is in cart
         $payment = $this->validateCartPayment($orderPayment->id_payment);
         if (false == $payment) {
-            $this->addFlash('error', $this->module->l('Payment validation has failed.', self::FILENAME));
-            Tools::redirect($this->context->link->getModuleLink($this->module->name, 'checkout'));
+            $this->errors[] = $this->module->l('Payment validation has failed.', self::FILENAME);
+            $this->redirectWithNotifications($this->context->link->getModuleLink($this->module->name, 'checkout'));
         }
 
         // Update payment mapping to be reserved
@@ -80,8 +82,8 @@ class DibsValidationModuleFrontController extends ModuleFrontController
         // Then check if payment country is valid
         if (!$this->validatePaymentCountry($payment)) {
             $this->cancelCartPayment();
-            $this->addFlash('error', $this->module->l('Payment was canceled due to invalid country.', self::FILENAME));
-            Tools::redirect($this->context->link->getModuleLink($this->module->name, 'checkout'));
+            $this->errors[] = $this->module->l('Payment was canceled due to invalid country.', self::FILENAME);
+            $this->redirectWithNotifications($this->context->link->getModuleLink($this->module->name, 'checkout'));
         }
 
         // If validations passed, let do some processing before creating order
@@ -92,9 +94,9 @@ class DibsValidationModuleFrontController extends ModuleFrontController
                 'Payment was canceled, because customer with email %s was found, please sign in.',
                 self::FILENAME
             );
-            $message = sprintf($errorMessage, $payment->getConsumer()->getPrivatePerson()->getEmail());
-            $this->addFlash('error', $message);
-            Tools::redirect($this->context->link->getModuleLink($this->module->name, 'checkout'));
+
+            $this->errors[] = sprintf($errorMessage, $payment->getConsumer()->getPrivatePerson()->getEmail());
+            $this->redirectWithNotifications($this->context->link->getModuleLink($this->module->name, 'checkout'));
         }
 
         // After processing is done, let's create order
@@ -105,7 +107,7 @@ class DibsValidationModuleFrontController extends ModuleFrontController
                 $this->context->cart->getOrderTotal(),
                 $this->module->displayName,
                 null,
-                array(),
+                [],
                 $this->context->currency->id,
                 false,
                 $this->context->cart->secure_key
@@ -116,13 +118,11 @@ class DibsValidationModuleFrontController extends ModuleFrontController
             $paymentCancelAction = $this->module->get('dibs.action.payment_cancel');
             $paymentCancelAction->cancelCartPayment($this->context->cart);
 
-            $error =$this->module->l('Payment was canceled due to order creation failure.', self::FILENAME);
-            $this->addFlash('error', $error);
-
-            Tools::redirect($this->context->link->getModuleLink($this->module->name, 'checkout'));
+            $this->errors[] = $this->module->l('Payment was canceled due to order creation failure.', self::FILENAME);
+            $this->redirectWithNotifications($this->context->link->getModuleLink($this->module->name, 'checkout'));
         }
 
-        $idOrder = Order::getOrderByCartId($this->context->cart->id);
+        $idOrder = Order::getIdByCartId($this->context->cart->id);
         $order = new Order($idOrder);
 
         // Update payment mappings
@@ -136,23 +136,23 @@ class DibsValidationModuleFrontController extends ModuleFrontController
             'order-confirmation',
             true,
             $this->context->language->id,
-            array(
+            [
                 'id_cart' => $order->id_cart,
                 'id_module' => $this->module->id,
                 'id_order' => $order->id,
                 'key' => $order->getCustomer()->secure_key,
-            )
+            ]
         );
 
-        Tools::redirect($orderConfirmationUrl);
+        $this->redirectWithNotifications($orderConfirmationUrl);
     }
 
     /**
-     * @param \Invertus\Dibs\Result\Payment $payment
+     * @param Payment $payment
      *
      * @return bool
      */
-    protected function processSaveCartCustomer(\Invertus\Dibs\Result\Payment $payment)
+    protected function processSaveCartCustomer(Payment $payment)
     {
         $customer = new Customer($this->context->cart->id_customer);
         if (Validate::isLoadedObject($customer)) {
@@ -172,7 +172,7 @@ class DibsValidationModuleFrontController extends ModuleFrontController
         $customer->firstname = $person->getFirstName();
         $customer->lastname = $person->getLastName();
         $customer->email = $person->getEmail();
-        $customer->passwd = Tools::encrypt($newPassword);
+        $customer->passwd = Tools::hash($newPassword);
         $customer->is_guest = 0;
         $customer->id_default_group = Configuration::get('PS_CUSTOMER_GROUP', null, $this->context->cart->id_shop);
         $customer->newsletter = 0;
@@ -194,7 +194,7 @@ class DibsValidationModuleFrontController extends ModuleFrontController
      *
      * @param string $paymentId
      *
-     * @return bool|\Invertus\Dibs\Result\Payment
+     * @return bool|Payment
      */
     protected function validateCartPayment($paymentId)
     {
@@ -224,11 +224,11 @@ class DibsValidationModuleFrontController extends ModuleFrontController
     /**
      * Validate if payment country is valid
      *
-     * @param \Invertus\Dibs\Result\Payment $payment
+     * @param Payment $payment
      *
      * @return bool
      */
-    protected function validatePaymentCountry(\Invertus\Dibs\Result\Payment $payment)
+    protected function validatePaymentCountry(Payment $payment)
     {
         $country = $payment->getConsumer()
             ->getShippingAddress()
@@ -276,17 +276,6 @@ class DibsValidationModuleFrontController extends ModuleFrontController
     }
 
     /**
-     * Add flash message
-     *
-     * @param string $type Can be success, error & etc.
-     * @param string $message
-     */
-    protected function addFlash($type, $message)
-    {
-        $this->context->cookie->{$type} = $message;
-    }
-
-    /**
      * Send welcome email if new customer is created
      *
      * @param Customer $customer
@@ -304,12 +293,12 @@ class DibsValidationModuleFrontController extends ModuleFrontController
             $this->context->language->id,
             'account',
             Mail::l('Welcome!'),
-            array(
+            [
                 '{firstname}' => $customer->firstname,
                 '{lastname}' => $customer->lastname,
                 '{email}' => $customer->email,
                 '{passwd}' => $password
-            ),
+            ],
             $customer->email,
             $customer->firstname.' '.$customer->lastname
         );

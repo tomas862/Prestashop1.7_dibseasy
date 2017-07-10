@@ -23,6 +23,7 @@ use Invertus\Dibs\Payment\PaymentCancelRequest;
 use Invertus\Dibs\Repository\OrderPaymentRepository;
 use Invertus\Dibs\Service\PaymentService;
 use Order;
+use PrestaShopCollection;
 
 /**
  * Class PaymentCancelAction
@@ -168,11 +169,11 @@ class PaymentCancelAction extends AbstractAction
      */
     public function cancelOrderPayments(array $orderIds)
     {
-        $collection = new \Collection('Order');
+        $collection = new PrestaShopCollection('Order');
         $collection->where('id_order', 'in', $orderIds);
         $orders = $collection->getResults();
 
-        $result = array();
+        $result = [];
         $success = false;
 
         /** @var Order $order */

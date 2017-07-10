@@ -118,12 +118,10 @@ class Dibs extends PaymentModule
     }
 
     /**
-     * Add Custom CSS and JS to front controller
+     * Add global CSS and JS to front controller
      */
     public function hookActionFrontControllerSetMedia()
     {
-        $controller = Tools::getValue('controller');
-
         $globalJsVariables = [
             'dibsGlobal' => [
                 'checkoutUrl' => $this->context->link->getModuleLink($this->name, 'checkout'),
@@ -135,10 +133,6 @@ class Dibs extends PaymentModule
         $this->context->controller->addJS(
             $this->getPathUri().'views/js/global.js'
         );
-
-        if (in_array($controller, ['order'])) {
-            $this->context->controller->addCSS($this->getPathUri().'views/css/front.css');
-        }
     }
 
     /**
@@ -167,7 +161,6 @@ class Dibs extends PaymentModule
         $paymentOption = new PaymentOption();
         $paymentOption->setCallToActionText($this->l('Pay by DIBS Easy Checkout'));
         $paymentOption->setAction($this->context->link->getModuleLink($this->name, 'checkout'));
-        $paymentOption->setLogo($this->getPathUri().'views/img/dibs.png');
 
         return [$paymentOption];
     }
@@ -186,7 +179,7 @@ class Dibs extends PaymentModule
         }
 
         /** @var Order $order */
-        $order = $params['objOrder'];
+        $order = $params['order'];
         $idOrder = $order->id;
         $idLang = $this->context->language->id;
         $currentOrderState = $order->getCurrentOrderState();
@@ -229,14 +222,14 @@ class Dibs extends PaymentModule
 
         $adminOrderUrl = $this->context->link->getAdminLink('AdminOrders');
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'dibsPaymentCanBeCanceled' => $orderPayment->canBeCanceled(),
             'dibsPaymentCanBeCharged' => $orderPayment->canBeCharged(),
             'dibsPaymentCanBeRefunded' => $orderPayment->canBeRefunded(),
             'dibsCancelUrl' => $adminOrderUrl.'&action=cancelPayment&id_order='.(int)$idOrder,
             'dibsChargeUrl' => $adminOrderUrl.'&action=chargePayment&id_order='.(int)$idOrder,
             'dibsRefundUrl' => $adminOrderUrl.'&action=refundPayment&id_order='.(int)$idOrder,
-        ));
+        ]);
 
         return $this->context->smarty->fetch($this->getLocalPath().'views/templates/hook/displayAdminOrder.tpl');
     }
@@ -296,12 +289,12 @@ class Dibs extends PaymentModule
         $carrier = new Carrier($order->id_carrier);
         $orderState = $order->getCurrentOrderState();
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'dibs_payment_id' => $orderPayment->id_payment,
             'dibs_delay' => $carrier->delay[$idLang],
             'dibs_contact_email' => $configuration->get('PS_SHOP_EMAIL'),
             'dibs_order_state' => $orderState->name[$idLang],
-        ));
+        ]);
 
         $params['extra_template_vars']['{dibs_html_block}'] = $this->context->smarty->fetch(
             $this->getLocalPath().'views/templates/hook/actionGetExtraMailTemplateVars.tpl'
@@ -360,6 +353,7 @@ class Dibs extends PaymentModule
         $deliveryAddress->lastname = $person->getLastName();
         $deliveryAddress->phone = $person->getPhoneNumber()->getPrefix().$person->getPhoneNumber()->getNumber();
         $deliveryAddress->id_customer = $this->context->cart->id_customer;
+        $deliveryAddress->deleted = 1;
 
         $deliveryAddressChecksum = $addressChecksumUtil->generateChecksum($deliveryAddress);
 
@@ -435,24 +429,13 @@ class Dibs extends PaymentModule
     }
 
     /**
-     * Check if PrestaShop version is >= 1.6
-     *
-     * @return bool
-     */
-    public function isPS16()
-    {
-        return version_compare(_PS_VERSION_, '1.6', '>=');
-    }
-
-    /**
      * Build module service container
      */
     private function compile()
     {
         $this->container = new ContainerBuilder();
-        $this->container->set('dibs.module', $this);
 
-        $locator = new FileLocator($this->getLocalPath().'config');
+        $locator = new FileLocator($this->getLocalPath().'etc/config');
         $loader  = new YamlFileLoader($this->container, $locator);
         $loader->load('config.yml');
 

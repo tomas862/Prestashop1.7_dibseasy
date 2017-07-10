@@ -14,18 +14,8 @@
  */
 
 $(document).ready(function() {
-    var $buttonOrderCart = $('#button_order_cart');
-    if (0 < $buttonOrderCart.length) {
-        $buttonOrderCart.attr('href', dibsGlobal.checkoutUrl);
-    }
-
-    var $layerCart = $('#layer_cart');
-    if (0 < $layerCart.length) {
-        $layerCart.find('a.btn.btn-default.button.button-medium').attr('href', dibsGlobal.checkoutUrl);
-    }
-
-    var $shoppingCart = $('#shopping_cart');
-    if (0 < $shoppingCart.length) {
-        $shoppingCart.find('a').attr('href', dibsGlobal.checkoutUrl);
+    var $checkoutButton = $('.checkout.cart-detailed-actions');
+    if (0 < $checkoutButton.length) {
+        $checkoutButton.find('.btn.btn-primary').attr('href', dibsGlobal.checkoutUrl);
     }
 });

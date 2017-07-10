@@ -16,8 +16,8 @@
 
 namespace Invertus\Dibs\Service;
 
-use Guzzle\Http\Client;
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Invertus\Dibs\Adapter\ConfigurationAdapter;
 
 /**
@@ -69,17 +69,18 @@ class ClientFactory
             $this->configurationAdapter->get('DIBS_TEST_SECRET_KEY') :
             $this->configurationAdapter->get('DIBS_PROD_SECRET_KEY');
 
-        $config = array(
-            'request.options' => array(
-                'headers' => array(
+        $config = [
+            'base_url' => $baseUrl,
+            'defaults' => [
+                'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                     'Authorization' => $auhorizationKey,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
-        $client = new Client($baseUrl, $config);
+        $client = new Client($config);
 
         return $client;
     }

@@ -19,6 +19,7 @@ namespace Invertus\Dibs\Action;
 use Cart;
 use Invertus\Dibs\Payment\PaymentItem;
 use Order;
+use PrestaShopCollection;
 
 /**
  * Class AbstractAction
@@ -44,14 +45,12 @@ abstract class AbstractAction
     protected function getCartProductItems(Cart $cart)
     {
         $products = $cart->getProducts();
-        $items = array();
+        $items = [];
 
         /** @var \OrderDetail $orderDetail */
         foreach ($products as $product) {
-            $unitPrice = isset($product['price_with_reduction']) ? $product['price_with_reduction'] : 0;
-            $taxAmount =
-                isset($product['price_with_reduction']) && isset($product['price_with_reduction_without_tax']) ?
-                    $product['price_with_reduction'] - $product['price_with_reduction_without_tax'] : 0;
+            $unitPrice = $product['price_with_reduction'];
+            $taxAmount = $product['price_with_reduction'] - $product['price_with_reduction_without_tax'];
 
             $attributes = isset($product['attributes']) ? $product['attributes'] : '';
 
@@ -170,7 +169,7 @@ abstract class AbstractAction
      */
     protected function getCartAdditionalItems(Cart $cart)
     {
-        $items = array();
+        $items = [];
 
         $discountItem = $this->getCartDiscountsItem($cart);
         if ($discountItem) {
@@ -199,11 +198,11 @@ abstract class AbstractAction
      */
     protected function getOrderProductItems(Order $order)
     {
-        $orderDetails = new \Collection('OrderDetail');
+        $orderDetails = new PrestaShopCollection('OrderDetail');
         $orderDetails->where('id_order', '=', $order->id);
         $orderDetails = $orderDetails->getResults();
 
-        $items = array();
+        $items = [];
 
         /** @var \OrderDetail $orderDetail */
         foreach ($orderDetails as $orderDetail) {
@@ -310,7 +309,7 @@ abstract class AbstractAction
      */
     protected function getOrderAdditionalItems(Order $order)
     {
-        $items = array();
+        $items = [];
 
         $discountItem = $this->getOrderDiscountsItem($order);
         if ($discountItem) {

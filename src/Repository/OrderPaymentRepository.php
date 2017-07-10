@@ -18,6 +18,7 @@ namespace Invertus\Dibs\Repository;
 
 use Db;
 use DbQuery;
+use PrestaShopCollection;
 
 /**
  * Class OrderPaymentRepository
@@ -86,7 +87,7 @@ class OrderPaymentRepository
      */
     public function findOrderPaymentByOrderId($idOrder)
     {
-        $collection = new \Collection('DibsOrderPayment');
+        $collection = new PrestaShopCollection('DibsOrderPayment');
         $collection->where('id_order', '=', $idOrder);
         $orderPayment = $collection->getFirst();
 
@@ -100,7 +101,7 @@ class OrderPaymentRepository
      */
     public function findOrderPaymentByCartId($idCart)
     {
-        $collection = new \Collection('DibsOrderPayment');
+        $collection = new PrestaShopCollection('DibsOrderPayment');
         $collection->where('id_cart', '=', $idCart);
         $orderPayment = $collection->getFirst();
 

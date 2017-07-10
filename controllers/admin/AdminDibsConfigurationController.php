@@ -40,68 +40,64 @@ class AdminDibsConfigurationController extends ModuleAdminController
      */
     protected function initOptions()
     {
-        $this->fields_options = array(
-            'dibs_configuration' => array(
+        $this->fields_options = [
+            'dibs_configuration' => [
                 'title' => $this->l('DIBS Easy Checkout configuration'),
-                'fields' => array(
-                    'DIBS_MERCHANT_ID' => array(
+                'fields' => [
+                    'DIBS_MERCHANT_ID' => [
                         'title' => $this->l('Merchant ID'),
                         'type' => 'text',
                         'class' => 'fixed-width-xxl',
                         'size' => '30',
-                    ),
-                    'DIBS_PROD_SECRET_KEY' => array(
+                    ],
+                    'DIBS_PROD_SECRET_KEY' => [
                         'title' => $this->l('Live secret key'),
                         'type' => 'text',
                         'validation' => 'isString',
                         'class' => 'fixed-width-xxl',
                         'size' => '30',
-                    ),
-                    'DIBS_TEST_SECRET_KEY' => array(
+                    ],
+                    'DIBS_TEST_SECRET_KEY' => [
                         'title' => $this->l('Test secret key'),
                         'type' => 'text',
                         'validation' => 'isString',
                         'class' => 'fixed-width-xxl',
                         'size' => '30',
-                    ),
-                    'DIBS_PROD_CHECKOUT_KEY' => array(
+                    ],
+                    'DIBS_PROD_CHECKOUT_KEY' => [
                         'title' => $this->l('Live checkout key'),
                         'type' => 'text',
                         'validation' => 'isString',
                         'class' => 'fixed-width-xxl',
                         'size' => '30',
-                    ),
-                    'DIBS_TEST_CHECKOUT_KEY' => array(
+                    ],
+                    'DIBS_TEST_CHECKOUT_KEY' => [
                         'title' => $this->l('Test checkout key'),
                         'type' => 'text',
                         'validation' => 'isString',
                         'class' => 'fixed-width-xxl',
                         'size' => '30',
-                    ),
-                    'DIBS_LANGUAGE' => array(
+                    ],
+                    'DIBS_LANGUAGE' => [
                         'title' => $this->l('Checkout language'),
                         'type' => 'select',
                         'class' => 'fixed-width-xxl',
                         'list' => $this->getLangs(),
                         'identifier' => 'id',
-                    ),
-                    'DIBS_TEST_MODE' => array(
+                    ],
+                    'DIBS_TEST_MODE' => [
                         'title' => $this->l('Testing mode'),
                         'validation' => 'isBool',
                         'type' => 'bool',
                         'cast' => 'intval',
                         'class' => 'fixed-width-xxl',
-                    ),
-                ),
-                'submit' => array(
+                    ],
+                ],
+                'submit' => [
                     'title' => $this->l('Save'),
-                ),
-            ),
-        );
-
-        if (!$this->module->isPS16()) {
-            $this->fields_options['dibs_configuration']['image'] = '../img/t/AdminPreferences.gif';
-        }
+                ],
+            ],
+        ];
     }
 
     /**
@@ -111,15 +107,15 @@ class AdminDibsConfigurationController extends ModuleAdminController
      */
     private function getLangs()
     {
-        return array(
-            array(
+        return [
+            [
                 'id' => 'en-GB',
                 'name' => $this->l('English')
-            ),
-            array(
+            ],
+            [
                 'id' => 'sv-SE',
                 'name' => $this->l('Swedish')
-            ),
-        );
+            ],
+        ];
     }
 }

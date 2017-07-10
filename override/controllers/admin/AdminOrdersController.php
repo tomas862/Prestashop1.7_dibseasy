@@ -20,17 +20,17 @@ class AdminOrdersController extends AdminOrdersControllerCore
     {
         parent::__construct();
 
-        $this->bulk_actions['ChargePayments'] = array(
+        $this->bulk_actions['ChargePayments'] = [
             'text' => $this->l('Charge Payments'),
-        );
+        ];
 
-        $this->bulk_actions['CancelPayments'] = array(
+        $this->bulk_actions['CancelPayments'] = [
             'text' => $this->l('Cancel Payments'),
-        );
+        ];
 
-        $this->bulk_actions['RefundPayments'] = array(
+        $this->bulk_actions['RefundPayments'] = [
             'text' => $this->l('Refund Payments'),
-        );
+        ];
 
         $this->addRowAction('chargePayment');
         $this->addRowAction('cancelPayment');
@@ -180,10 +180,10 @@ class AdminOrdersController extends AdminOrdersControllerCore
             return null;
         }
 
-        $params = array(
+        $params = [
             'href' => self::$currentIndex.'&action=chargePayment&token='.$this->token.'&id_order='.(int)$idOrder,
             'action' => $this->l('Charge Payment'),
-        );
+        ];
 
         return $this->renderListAction($params);
     }
@@ -196,10 +196,10 @@ class AdminOrdersController extends AdminOrdersControllerCore
             return null;
         }
 
-        $params = array(
+        $params = [
             'href' => self::$currentIndex.'&action=cancelPayment&token='.$this->token.'&id_order='.(int)$idOrder,
             'action' => $this->l('Cancel Payment'),
-        );
+        ];
 
         return $this->renderListAction($params);
     }
@@ -212,10 +212,10 @@ class AdminOrdersController extends AdminOrdersControllerCore
             return null;
         }
 
-        $params = array(
+        $params = [
             'href' => self::$currentIndex.'&action=refundPayment&token='.$this->token.'&id_order='.(int)$idOrder,
             'action' => $this->l('Refund Payment'),
-        );
+        ];
 
         return $this->renderListAction($params);
     }

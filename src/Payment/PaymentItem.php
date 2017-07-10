@@ -217,7 +217,7 @@ class PaymentItem
      */
     public function toArray()
     {
-        $itemArray = array(
+        $itemArray = [
             'reference' => $this->getReference(),
             'name' => $this->getName(),
             'quantity' => $this->getQuantity(),
@@ -227,7 +227,7 @@ class PaymentItem
             'taxAmount' => $this->getTaxAmount(),
             'grossTotalAmount' => $this->getGrossTotalAmount(),
             'netTotalAmount' => $this->getNetTotalAmount(),
-        );
+        ];
 
         return $itemArray;
     }
