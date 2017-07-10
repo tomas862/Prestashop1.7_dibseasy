@@ -270,7 +270,7 @@ class Dibs extends PaymentModule
 
         /** @var Cart $cart */
         $cart = $params['cart'];
-        $idOrder = Order::getOrderByCartId($cart->id);
+        $idOrder = Order::getIdByCartId($cart->id);
         $order = new Order($idOrder);
 
         if ($this->name != $order->module || !Validate::isLoadedObject($order)) {
@@ -353,7 +353,6 @@ class Dibs extends PaymentModule
         $deliveryAddress->lastname = $person->getLastName();
         $deliveryAddress->phone = $person->getPhoneNumber()->getPrefix().$person->getPhoneNumber()->getNumber();
         $deliveryAddress->id_customer = $this->context->cart->id_customer;
-        $deliveryAddress->deleted = 1;
 
         $deliveryAddressChecksum = $addressChecksumUtil->generateChecksum($deliveryAddress);
 
