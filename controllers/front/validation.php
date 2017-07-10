@@ -183,6 +183,8 @@ class DibsValidationModuleFrontController extends ModuleFrontController
 
         $this->sendConfirmationEmail($customer, $newPassword);
 
+        $this->context->updateCustomer($customer);
+
         $this->context->cart->id_customer = $customer->id;
         $this->context->cart->secure_key = $customer->secure_key;
 
