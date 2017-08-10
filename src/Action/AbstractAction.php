@@ -206,13 +206,15 @@ abstract class AbstractAction
 
         /** @var \OrderDetail $orderDetail */
         foreach ($orderDetails as $orderDetail) {
+            $totalTax = $orderDetail->total_price_tax_incl - $orderDetail->total_price_tax_excl;
+
             $item = new PaymentItem();
             $item->setReference($orderDetail->product_reference ?: sprintf('id_product-%d', $orderDetail->product_id));
             $item->setName($orderDetail->product_name);
             $item->setQuantity($orderDetail->product_quantity);
             $item->setUnitPrice($orderDetail->unit_price_tax_excl);
             $item->setTaxRate($orderDetail->tax_rate);
-            $item->setTaxAmount($orderDetail->unit_price_tax_incl - $orderDetail->unit_price_tax_excl);
+            $item->setTaxAmount($totalTax);
             $item->setGrossTotalAmount($orderDetail->total_price_tax_incl);
             $item->setNetTotalAmount($orderDetail->total_price_tax_excl);
 
