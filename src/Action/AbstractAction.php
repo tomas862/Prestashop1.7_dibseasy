@@ -49,8 +49,8 @@ abstract class AbstractAction
 
         /** @var \OrderDetail $orderDetail */
         foreach ($products as $product) {
-            $unitPrice = $product['price_with_reduction'];
-            $taxAmount = $product['price_with_reduction'] - $product['price_with_reduction_without_tax'];
+            $unitPrice = $product['price_with_reduction_without_tax'];
+            $taxAmountTotal = $product['total_wt'] - $product['total'];
 
             $attributes = isset($product['attributes']) ? $product['attributes'] : '';
 
@@ -60,7 +60,7 @@ abstract class AbstractAction
             $item->setQuantity($product['cart_quantity']);
             $item->setUnitPrice($unitPrice);
             $item->setTaxRate($product['rate']);
-            $item->setTaxAmount($taxAmount);
+            $item->setTaxAmount($taxAmountTotal);
             $item->setGrossTotalAmount($product['total_wt']);
             $item->setNetTotalAmount($product['total']);
 
