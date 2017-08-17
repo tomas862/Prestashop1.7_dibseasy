@@ -98,6 +98,7 @@ class Installer
         $this->installConfiguration();
         $this->installOrderStates();
         $this->installDatabase();
+        $this->installDefaultAddresses();
 
         return true;
     }
@@ -110,6 +111,7 @@ class Installer
     public function uninstall()
     {
         $this->uninstallOrderStates();
+        $this->uninstallDefaultAddresses();
         $this->uninstallConfiguration();
         $this->uninstallDatabase();
 
@@ -285,5 +287,44 @@ class Installer
         $sqlStatements = str_replace('ENGINE_TYPE', _MYSQL_ENGINE_, $sqlStatements);
 
         return $sqlStatements;
+    }
+
+    /**
+     * Install default delivery addresses for supported countries
+     */
+    protected function installDefaultAddresses()
+    {
+        $sweedenAddress = new \Address();
+        $sweedenAddress->id_country = \Country::getByIso('SE');
+        $sweedenAddress->alias = 'Dibs Easy Sweeden Address';
+        $sweedenAddress->address1 = 'Address1';
+        $sweedenAddress->address2 = '';
+        $sweedenAddress->postcode = '00000';
+        $sweedenAddress->city = 'Any';
+        $sweedenAddress->firstname = 'Dibs';
+        $sweedenAddress->lastname = 'Easy';
+        $sweedenAddress->phone = '000000000';
+        $sweedenAddress->id_customer = 0;
+        $sweedenAddress->deleted = 1;
+
+        if (!$sweedenAddress->save()) {
+            throw new Exception('Failed to save default address');
+        }
+
+        $this->configurationAdapter->set('DIBS_SWEEDEN_ADDRESS_ID', $sweedenAddress->id);
+
+        return true;
+    }
+
+    protected function uninstallDefaultAddresses()
+    {
+        $idAddress = $this->configurationAdapter->get('DIBS_SWEEDEN_ADDRESS_ID');
+        if (!$idAddress) {
+            return true;
+        }
+
+        $address = new \Address($idAddress);
+
+        return $address->delete();
     }
 }

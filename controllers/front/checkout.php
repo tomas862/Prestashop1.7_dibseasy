@@ -112,6 +112,14 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
         CartRule::autoRemoveFromCart($this->context);
         CartRule::autoAddToCart($this->context);
 
+        $resetDelivery = false;
+
+        if (!$this->context->cart->id_address_delivery) {
+            $this->context->cart->id_address_delivery = Configuration::get('DIBS_SWEEDEN_ADDRESS_ID');
+            $this->context->cart->save();
+            $resetDelivery = true;
+        }
+
         /** @var \Invertus\Dibs\Repository\OrderPaymentRepository $orderPaymentRepository */
         $orderPaymentRepository = $this->module->get('dibs.repository.order_payment');
         $orderPayment = $orderPaymentRepository->findOrderPaymentByCartId($this->context->cart->id);
@@ -155,6 +163,11 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
         }
 
         $this->jsVariables['dibsCheckout']['paymentID'] = $paymentId;
+
+        if ($resetDelivery) {
+            $this->context->cart->id_address_delivery = 0;
+            $this->context->cart->save();
+        }
     }
 
     /**
