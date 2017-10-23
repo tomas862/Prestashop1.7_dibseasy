@@ -115,7 +115,7 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
         $resetDelivery = false;
 
         if (!$this->context->cart->id_address_delivery) {
-            $this->context->cart->id_address_delivery = Configuration::get('DIBS_SWEEDEN_ADDRESS_ID');
+            $this->context->cart->id_address_delivery = $this->getDeliveryAddressId();
             $this->context->cart->save();
             $resetDelivery = true;
         }
@@ -147,6 +147,8 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
             $cartCurrency = new Currency($this->context->cart->id_currency);
 
             if ($paymentAmountInCents == $cartAmountInCents && $cartCurrency->iso_code == $paymentCurrency) {
+                // When payment ID is in query params we have to reload page to remove it.
+                // Because dibs iframe won't load when url contains payment ID.
                 $this->context->cookie->dibs_payment_id = $paymentId;
                 Tools::redirect($this->context->link->getModuleLink($this->module->name, 'checkout'));
             }
@@ -228,5 +230,30 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
             'delivery_message' => $message,
             'id_address' => $this->context->cart->id_address_delivery,
         ]);
+    }
+
+    /**
+     * Get delivery address by context language
+     *
+     * @return int
+     */
+    protected function getDeliveryAddressId()
+    {
+        $idAddress = null;
+
+        switch ($this->context->currency->iso_code) {
+            case 'DKK':
+                $idAddress = Configuration::get('DIBS_DENMARK_ADDRESS_ID');
+                break;
+            case 'NOK':
+                $idAddress = Configuration::get('DIBS_NORWAY_ADDRESS_ID');
+                break;
+            case 'SEK':
+            default:
+                $idAddress = Configuration::get('DIBS_SWEEDEN_ADDRESS_ID');
+                break;
+        }
+
+        return (int) $idAddress;
     }
 }
