@@ -1,4 +1,5 @@
 <?php
+
 use Invertus\Dibs\Result\Payment;
 
 /**
@@ -57,14 +58,17 @@ class DibsValidationModuleFrontController extends ModuleFrontController
      */
     public function postProcess()
     {
+        $idCart = $this->context->cart->id;
+        $checkoutUrl = $this->context->link->getModuleLink($this->module->name, 'checkout');
+
         // Get payment which is associated with cart
         // It's simple mapping (id_cart - id_order - id_payment (dibs) - id_charge (dibs) - etc.)
         /** @var \Invertus\Dibs\Repository\OrderPaymentRepository $orderPaymentRepository */
         $orderPaymentRepository = $this->module->get('dibs.repository.order_payment');
-        $orderPayment = $orderPaymentRepository->findOrderPaymentByCartId($this->context->cart->id);
+        $orderPayment = $orderPaymentRepository->findOrderPaymentByCartId($idCart);
         if (!$orderPayment instanceof DibsOrderPayment) {
             $this->errors[] = $this->module->l('Unexpected error occured.', self::FILENAME);
-            $this->redirectWithNotifications($this->context->link->getModuleLink($this->module->name, 'checkout'));
+            $this->redirectWithNotifications($checkoutUrl);
         }
 
         // Before creating order let's make some validations
@@ -72,7 +76,7 @@ class DibsValidationModuleFrontController extends ModuleFrontController
         $payment = $this->validateCartPayment($orderPayment->id_payment);
         if (false == $payment) {
             $this->errors[] = $this->module->l('Payment validation has failed.', self::FILENAME);
-            $this->redirectWithNotifications($this->context->link->getModuleLink($this->module->name, 'checkout'));
+            $this->redirectWithNotifications($checkoutUrl);
         }
 
         // Update payment mapping to be reserved
@@ -83,20 +87,20 @@ class DibsValidationModuleFrontController extends ModuleFrontController
         if (!$this->validatePaymentCountry($payment)) {
             $this->cancelCartPayment();
             $this->errors[] = $this->module->l('Payment was canceled due to invalid country.', self::FILENAME);
-            $this->redirectWithNotifications($this->context->link->getModuleLink($this->module->name, 'checkout'));
+            $this->redirectWithNotifications($checkoutUrl);
         }
 
         // If validations passed, let do some processing before creating order
         // First assign customer to cart if it does not exist
         if (!$this->processSaveCartCustomer($payment)) {
             $this->cancelCartPayment();
-            $this->redirectWithNotifications($this->context->link->getModuleLink($this->module->name, 'checkout'));
+            $this->redirectWithNotifications($checkoutUrl);
         }
 
         // After processing is done, let's create order
         try {
             $this->module->validateOrder(
-                $this->context->cart->id,
+                $idCart,
                 (int) Configuration::get('DIBS_ACCEPTED_ORDER_STATE_ID'),
                 $this->context->cart->getOrderTotal(),
                 $this->module->displayName,
@@ -113,10 +117,10 @@ class DibsValidationModuleFrontController extends ModuleFrontController
             $paymentCancelAction->cancelCartPayment($this->context->cart);
 
             $this->errors[] = $this->module->l('Payment was canceled due to order creation failure.', self::FILENAME);
-            $this->redirectWithNotifications($this->context->link->getModuleLink($this->module->name, 'checkout'));
+            $this->redirectWithNotifications($checkoutUrl);
         }
 
-        $idOrder = Order::getIdByCartId($this->context->cart->id);
+        $idOrder = Order::getIdByCartId($idCart);
         $order = new Order($idOrder);
 
         // Update payment mappings

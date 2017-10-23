@@ -18,6 +18,9 @@ namespace Invertus\Dibs\Result;
 
 class PaymentDetail
 {
+    const PAYMENT_TYPE_INVOICE = 'INVOICE';
+    const PAYMENT_TYPE_CARD = 'CARD';
+
     /**
      * @var string
      */
