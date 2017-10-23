@@ -112,12 +112,9 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
         CartRule::autoRemoveFromCart($this->context);
         CartRule::autoAddToCart($this->context);
 
-        $resetDelivery = false;
-
         if (!$this->context->cart->id_address_delivery) {
             $this->context->cart->id_address_delivery = $this->getDeliveryAddressId();
             $this->context->cart->save();
-            $resetDelivery = true;
         }
 
         if (!$this->context->cart->id_carrier) {
@@ -171,11 +168,6 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
         }
 
         $this->jsVariables['dibsCheckout']['paymentID'] = $paymentId;
-
-        if ($resetDelivery) {
-            $this->context->cart->id_address_delivery = 0;
-            $this->context->cart->save();
-        }
     }
 
     /**
