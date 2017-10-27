@@ -14,8 +14,17 @@
  */
 
 $(document).ready(function() {
-    var $checkoutButton = $('.checkout.cart-detailed-actions');
-    if (0 < $checkoutButton.length) {
-        $checkoutButton.find('.btn.btn-primary').attr('href', dibsGlobal.checkoutUrl);
+    replaceCheckoutUrl();
+
+    prestashop.on('updateCart', function () {
+        setTimeout(replaceCheckoutUrl, 1000);
+    });
+
+    function replaceCheckoutUrl()
+    {
+        var $checkoutButton = $('.checkout.cart-detailed-actions');
+        if (0 < $checkoutButton.length) {
+            $checkoutButton.find('.btn.btn-primary').attr('href', dibsGlobal.checkoutUrl);
+        }
     }
 });

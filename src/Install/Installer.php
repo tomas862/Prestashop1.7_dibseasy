@@ -354,7 +354,7 @@ class Installer
         $address->lastname = 'Easy';
         $address->phone = '000000000';
         $address->id_customer = 0;
-        $address->deleted = 1;
+        $address->deleted = 0;
 
         if (!$address->save()) {
             throw new Exception('Failed to save default address');

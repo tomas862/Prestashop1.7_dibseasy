@@ -119,8 +119,10 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
 
         if (!$this->context->cart->id_carrier) {
             $idCarrierDefault = (int) Configuration::get('PS_CARRIER_DEFAULT');
-            $this->context->cart->id_carrier = $idCarrierDefault;
-            $this->context->cart->save();
+            $option = [$this->context->cart->id_address_delivery => $idCarrierDefault.','];
+
+            $this->context->cart->setDeliveryOption($option);
+            $this->context->cart->update();
         }
 
         /** @var \Invertus\Dibs\Repository\OrderPaymentRepository $orderPaymentRepository */

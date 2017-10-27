@@ -97,6 +97,31 @@ class DibsValidationModuleFrontController extends ModuleFrontController
             $this->redirectWithNotifications($checkoutUrl);
         }
 
+        // Take care of delivery address on guest checkout
+        if (!$this->context->cart->id_address_delivery) {
+            $defaultAddress = new Address($this->getDeliveryAddressId());
+            $defaultAddress = clone $defaultAddress;
+            $defaultAddress->id = null;
+            $defaultAddress->id_customer = $this->context->customer->id;
+            $defaultAddress->deleted = true;
+
+            if ($defaultAddress->save()) {
+                $this->context->cart->updateAddressId(
+                    $this->context->cart->id_address_delivery,
+                    $defaultAddress->id
+                );
+
+                $this->context->cart->autosetProductAddress();
+
+                $option = [$defaultAddress->id => $this->context->cart->id_carrier.','];
+
+                $this->context->cart->setDeliveryOption($option);
+                $this->context->cart->update();
+
+                $this->context->cart->getDeliveryOption(null, false, false);
+            }
+        }
+
         // After processing is done, let's create order
         try {
             $this->module->validateOrder(
@@ -115,6 +140,10 @@ class DibsValidationModuleFrontController extends ModuleFrontController
             /** @var \Invertus\Dibs\Action\PaymentCancelAction $paymentCancelAction */
             $paymentCancelAction = $this->module->get('dibs.action.payment_cancel');
             $paymentCancelAction->cancelCartPayment($this->context->cart);
+
+            if (_PS_MODE_DEV_) {
+                throw $e;
+            }
 
             $this->errors[] = $this->module->l('Payment was canceled due to order creation failure.', self::FILENAME);
             $this->redirectWithNotifications($checkoutUrl);
@@ -143,6 +172,26 @@ class DibsValidationModuleFrontController extends ModuleFrontController
         );
 
         $this->redirectWithNotifications($orderConfirmationUrl);
+    }
+
+    protected function getDeliveryAddressId()
+    {
+        $idAddress = null;
+
+        switch ($this->context->currency->iso_code) {
+            case 'DKK':
+                $idAddress = Configuration::get('DIBS_DENMARK_ADDRESS_ID');
+                break;
+            case 'NOK':
+                $idAddress = Configuration::get('DIBS_NORWAY_ADDRESS_ID');
+                break;
+            case 'SEK':
+            default:
+                $idAddress = Configuration::get('DIBS_SWEEDEN_ADDRESS_ID');
+                break;
+        }
+
+        return (int) $idAddress;
     }
 
     /**
