@@ -20,7 +20,7 @@
     <div class="col-md-8">
         <section class="checkout-step">
             <h1 class="step-title h3">
-                {l s='Shipping Method' mod='dibs'}
+                {l s='Shipping Method' mod='dibseasy'}
             </h1>
 
             <br>

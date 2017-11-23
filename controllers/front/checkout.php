@@ -16,10 +16,10 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
  * International Registered Trademark & Property of INVERTUS, UAB
  */
 
-class DibsCheckoutModuleFrontController extends ModuleFrontController
+class DibsEasyCheckoutModuleFrontController extends ModuleFrontController
 {
     /**
-     * @var Dibs
+     * @var DibsEasy
      */
     public $module;
 
@@ -99,9 +99,9 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
         $this->jsVariables['dibsCheckout']['validationUrl'] = $validationUrl;
         $this->jsVariables['dibsCheckout']['checkoutUrl'] = $changeDeliveryOptionUrl;
 
-        $this->registerStylesheet('dibs-checkout-css', 'modules/dibs/views/css/checkout.css');
-        $this->registerJavascript('dibs-remote-js', $checkoutJs, ['server' => 'remote']);
-        $this->registerJavascript('dibs-checkout-js', 'modules/dibs/views/js/checkout.js');
+        $this->registerStylesheet('dibseasy-checkout-css', 'modules/dibseasy/views/css/checkout.css');
+        $this->registerJavascript('dibseasy-remote-js', $checkoutJs, ['server' => 'remote']);
+        $this->registerJavascript('dibseasy-checkout-js', 'modules/dibseasy/views/js/checkout.js');
     }
 
     /**
@@ -125,7 +125,7 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
             $this->context->cart->update();
         }
 
-        /** @var \Invertus\Dibs\Repository\OrderPaymentRepository $orderPaymentRepository */
+        /** @var \Invertus\DibsEasy\Repository\OrderPaymentRepository $orderPaymentRepository */
         $orderPaymentRepository = $this->module->get('dibs.repository.order_payment');
         $orderPayment = $orderPaymentRepository->findOrderPaymentByCartId($this->context->cart->id);
         if ($orderPayment) {
@@ -135,7 +135,7 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
         if (Tools::isSubmit('paymentId')) {
             $paymentId = Tools::getValue('paymentId');
 
-            /** @var \Invertus\Dibs\Action\PaymentGetAction $paymentGetAction */
+            /** @var \Invertus\DibsEasy\Action\PaymentGetAction $paymentGetAction */
             $paymentGetAction = $this->module->get('dibs.action.payment_get');
             $payment = $paymentGetAction->getPayment($paymentId);
 
@@ -162,7 +162,7 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
             $orderPayment->id_cart = $this->context->cart->id;
             $orderPayment->save();
         } else {
-            /** @var \Invertus\Dibs\Action\PaymentCreateAction $paymentCreateAction */
+            /** @var \Invertus\DibsEasy\Action\PaymentCreateAction $paymentCreateAction */
             $paymentCreateAction = $this->module->get('dibs.action.payment_create');
             $orderPayment = $paymentCreateAction->createPayment($this->context->cart);
 
@@ -198,7 +198,7 @@ class DibsCheckoutModuleFrontController extends ModuleFrontController
 
         parent::initContent();
 
-        $this->setTemplate('module:dibs/views/templates/front/checkout.tpl');
+        $this->setTemplate('module:dibseasy/views/templates/front/checkout.tpl');
     }
 
     /**

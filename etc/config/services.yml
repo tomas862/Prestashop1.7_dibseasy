@@ -1,31 +1,31 @@
 services:
     dibs.module:
-        class: 'Dibs'
+        class: 'DibsEasy'
         factory: ['Module', 'getInstanceByName']
         arguments:
-            - 'dibs'
+            - 'dibseasy'
 
     dibs.adapter.configuration:
-        class: 'Invertus\Dibs\Adapter\ConfigurationAdapter'
+        class: 'Invertus\DibsEasy\Adapter\ConfigurationAdapter'
 
     dibs.adapter.language:
-        class: 'Invertus\Dibs\Adapter\LanguageAdapter'
+        class: 'Invertus\DibsEasy\Adapter\LanguageAdapter'
 
     dibs.adapter.tools:
-        class: 'Invertus\Dibs\Adapter\ToolsAdapter'
+        class: 'Invertus\DibsEasy\Adapter\ToolsAdapter'
 
     dibs.adapter.link:
-        class: 'Invertus\Dibs\Adapter\LinkAdapter'
+        class: 'Invertus\DibsEasy\Adapter\LinkAdapter'
 
     dibs.adapter.price_round:
-        class: 'Invertus\Dibs\Adapter\PriceRoundAdapter'
+        class: 'Invertus\DibsEasy\Adapter\PriceRoundAdapter'
 
     dibs.context.db:
         class: 'Db'
         factory: ['Db', 'getInstance']
 
     dibs.installer:
-        class: 'Invertus\Dibs\Install\Installer'
+        class: 'Invertus\DibsEasy\Install\Installer'
         arguments:
             - '@dibs.module'
             - '@dibs.adapter.configuration'
@@ -35,7 +35,7 @@ services:
             - '%module_settings%'
 
     dibs.service.client_factory:
-        class: 'Invertus\Dibs\Service\ClientFactory'
+        class: 'Invertus\DibsEasy\Service\ClientFactory'
         arguments:
             - '@dibs.adapter.configuration'
             - '%api_test_url%'
@@ -46,13 +46,13 @@ services:
         factory: 'dibs.service.client_factory:createNew'
 
     dibs.service.api_request:
-        class: 'Invertus\Dibs\Service\ApiRequest'
+        class: 'Invertus\DibsEasy\Service\ApiRequest'
         arguments:
             - '@dibs.http_client'
             - '@dibs.adapter.tools'
 
     dibs.service.payment:
-        class: 'Invertus\Dibs\Service\PaymentService'
+        class: 'Invertus\DibsEasy\Service\PaymentService'
         arguments:
             - '@dibs.service.api_request'
             - '@dibs.repository.order_payment'
@@ -60,12 +60,12 @@ services:
             - '@dibs.adapter.link'
 
     dibs.repository.order_payment:
-        class: 'Invertus\Dibs\Repository\OrderPaymentRepository'
+        class: 'Invertus\DibsEasy\Repository\OrderPaymentRepository'
         arguments:
             - '@dibs.context.db'
 
     dibs.action.payment_cancel:
-        class: 'Invertus\Dibs\Action\PaymentCancelAction'
+        class: 'Invertus\DibsEasy\Action\PaymentCancelAction'
         arguments:
             - '@dibs.service.payment'
             - '@dibs.adapter.configuration'
@@ -73,7 +73,7 @@ services:
             - '@dibs.module'
 
     dibs.action.payment_charge:
-        class: 'Invertus\Dibs\Action\PaymentChargeAction'
+        class: 'Invertus\DibsEasy\Action\PaymentChargeAction'
         arguments:
             - '@dibs.service.payment'
             - '@dibs.repository.order_payment'
@@ -81,7 +81,7 @@ services:
             - '@dibs.module'
 
     dibs.action.payment_refund:
-        class: 'Invertus\Dibs\Action\PaymentRefundAction'
+        class: 'Invertus\DibsEasy\Action\PaymentRefundAction'
         arguments:
             - '@dibs.service.payment'
             - '@dibs.adapter.configuration'
@@ -89,7 +89,7 @@ services:
             - '@dibs.module'
 
     dibs.action.payment_create:
-        class: 'Invertus\Dibs\Action\PaymentCreateAction'
+        class: 'Invertus\DibsEasy\Action\PaymentCreateAction'
         arguments:
             - '@dibs.service.payment'
             - '@dibs.adapter.link'
@@ -97,9 +97,9 @@ services:
             - '%supported_countries%'
 
     dibs.action.payment_get:
-        class: 'Invertus\Dibs\Action\PaymentGetAction'
+        class: 'Invertus\DibsEasy\Action\PaymentGetAction'
         arguments:
              - '@dibs.service.payment'
 
     dibs.util.address_checksum:
-        class: 'Invertus\Dibs\Util\AddressChecksum'
+        class: 'Invertus\DibsEasy\Util\AddressChecksum'

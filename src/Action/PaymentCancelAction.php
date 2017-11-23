@@ -14,21 +14,21 @@
  * International Registered Trademark & Property of INVERTUS, UAB
  */
 
-namespace Invertus\Dibs\Action;
+namespace Invertus\DibsEasy\Action;
 
 use Cart;
-use Dibs;
-use Invertus\Dibs\Adapter\ConfigurationAdapter;
-use Invertus\Dibs\Payment\PaymentCancelRequest;
-use Invertus\Dibs\Repository\OrderPaymentRepository;
-use Invertus\Dibs\Service\PaymentService;
+use Invertus\DibsEasy\Adapter\ConfigurationAdapter;
+use Invertus\DibsEasy\Payment\PaymentCancelRequest;
+use Invertus\DibsEasy\Repository\OrderPaymentRepository;
+use Invertus\DibsEasy\Service\PaymentService;
+use Module;
 use Order;
 use PrestaShopCollection;
 
 /**
  * Class PaymentCancelAction
  *
- * @package Invertus\Dibs\Action
+ * @package Invertus\DibsEasy\Action
  */
 class PaymentCancelAction extends AbstractAction
 {
@@ -48,7 +48,7 @@ class PaymentCancelAction extends AbstractAction
     private $orderPaymentRepository;
 
     /**
-     * @var Dibs
+     * @var Module
      */
     private $module;
 
@@ -58,13 +58,13 @@ class PaymentCancelAction extends AbstractAction
      * @param PaymentService $paymentService
      * @param ConfigurationAdapter $configurationAdapter
      * @param OrderPaymentRepository $orderPaymentRepository
-     * @param Dibs $module
+     * @param Module $module
      */
     public function __construct(
         PaymentService $paymentService,
         ConfigurationAdapter $configurationAdapter,
         OrderPaymentRepository $orderPaymentRepository,
-        Dibs $module
+        Module $module
     ) {
         $this->paymentService = $paymentService;
         $this->configurationAdapter = $configurationAdapter;
@@ -194,7 +194,7 @@ class PaymentCancelAction extends AbstractAction
     }
 
     /**
-     * @return Dibs
+     * @return \DibsEasy
      */
     protected function getModule()
     {

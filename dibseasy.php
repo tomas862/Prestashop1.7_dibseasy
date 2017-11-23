@@ -20,9 +20,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
- * Class Dibs
+ * Class DibsEasy
  */
-class Dibs extends PaymentModule
+class DibsEasy extends PaymentModule
 {
     /**
      * @var ContainerBuilder
@@ -30,11 +30,11 @@ class Dibs extends PaymentModule
     private $container;
 
     /**
-     * Dibs constructor.
+     * DibsEasy constructor.
      */
     public function __construct()
     {
-        $this->name = 'dibs';
+        $this->name = 'dibseasy';
         $this->author = 'Invertus';
         $this->tab = 'payments_gateways';
         $this->version = '1.0.2';
@@ -63,7 +63,7 @@ class Dibs extends PaymentModule
      */
     public function install()
     {
-        /** @var \Invertus\Dibs\Install\Installer $installer */
+        /** @var \Invertus\DibsEasy\Install\Installer $installer */
         $installer = $this->get('dibs.installer');
 
         return parent::install() && $installer->install();
@@ -74,7 +74,7 @@ class Dibs extends PaymentModule
      */
     public function uninstall()
     {
-        /** @var \Invertus\Dibs\Install\Installer $installer */
+        /** @var \Invertus\DibsEasy\Install\Installer $installer */
         $installer = $this->get('dibs.installer');
 
         return $installer->uninstall() && parent::uninstall();
@@ -87,7 +87,7 @@ class Dibs extends PaymentModule
      */
     public function getTabs()
     {
-        /** @var \Invertus\Dibs\Install\Installer $installer */
+        /** @var \Invertus\DibsEasy\Install\Installer $installer */
         $installer = $this->get('dibs.installer');
 
         return $installer->getTabs();
@@ -209,7 +209,7 @@ class Dibs extends PaymentModule
             return '';
         }
 
-        /** @var \Invertus\Dibs\Repository\OrderPaymentRepository $orderPaymentRepository */
+        /** @var \Invertus\DibsEasy\Repository\OrderPaymentRepository $orderPaymentRepository */
         $orderPaymentRepository = $this->get('dibs.repository.order_payment');
         $orderPayment = $orderPaymentRepository->findOrderPaymentByOrderId($idOrder);
         if (!$orderPayment ||
@@ -246,7 +246,7 @@ class Dibs extends PaymentModule
 
         $shippingCostRefund = Tools::getValue('partialRefundShippingCost');
 
-        /** @var \Invertus\Dibs\Action\PaymentRefundAction $refundAction */
+        /** @var \Invertus\DibsEasy\Action\PaymentRefundAction $refundAction */
         $refundAction = $this->get('dibs.action.payment_refund');
 
         $success = $refundAction->partialRefundPayment($order, $params['productList'], $shippingCostRefund);
@@ -279,13 +279,13 @@ class Dibs extends PaymentModule
             return;
         }
 
-        /** @var \Invertus\Dibs\Adapter\ConfigurationAdapter $configuration */
+        /** @var \Invertus\DibsEasy\Adapter\ConfigurationAdapter $configuration */
         $configuration = $this->get('dibs.adapter.configuration');
-        /** @var \Invertus\Dibs\Repository\OrderPaymentRepository $orderPaymentRepository */
+        /** @var \Invertus\DibsEasy\Repository\OrderPaymentRepository $orderPaymentRepository */
         $orderPaymentRepository = $this->get('dibs.repository.order_payment');
         $orderPayment = $orderPaymentRepository->findOrderPaymentByCartId($cart->id);
 
-        /** @var \Invertus\Dibs\Action\PaymentGetAction $getPaymentAction */
+        /** @var \Invertus\DibsEasy\Action\PaymentGetAction $getPaymentAction */
         $getPaymentAction = $this->get('dibs.action.payment_get');
         $payment = $getPaymentAction->getPayment($orderPayment->id_payment);
 
@@ -302,7 +302,7 @@ class Dibs extends PaymentModule
             'dibs_masked_pan' => '',
         ];
 
-        if ($payment instanceof \Invertus\Dibs\Result\Payment) {
+        if ($payment instanceof \Invertus\DibsEasy\Result\Payment) {
             $paymentDetail = $payment->getPaymentDetail();
             $tplVars['dibs_payment_type'] = $paymentDetail->getPaymentType();
             $tplVars['dibs_masked_pan'] = $paymentDetail->getCardDetails()->getMaskedPan();
@@ -335,15 +335,15 @@ class Dibs extends PaymentModule
             return true;
         }
 
-        /** @var \Invertus\Dibs\Repository\OrderPaymentRepository $orderPaymentRepository */
+        /** @var \Invertus\DibsEasy\Repository\OrderPaymentRepository $orderPaymentRepository */
         $orderPaymentRepository = $this->get('dibs.repository.order_payment');
         $orderPayment = $orderPaymentRepository->findOrderPaymentByCartId($this->context->cart->id);
 
-        /** @var \Invertus\Dibs\Action\PaymentGetAction $paymentGetAction */
+        /** @var \Invertus\DibsEasy\Action\PaymentGetAction $paymentGetAction */
         $paymentGetAction = $this->get('dibs.action.payment_get');
         $payment = $paymentGetAction->getPayment($orderPayment->id_payment);
 
-        /** @var \Invertus\Dibs\Util\AddressChecksum $addressChecksumUtil */
+        /** @var \Invertus\DibsEasy\Util\AddressChecksum $addressChecksumUtil */
         $addressChecksumUtil = $this->get('dibs.util.address_checksum');
 
         $shippingAddress = $payment->getConsumer()->getShippingAddress();
@@ -422,7 +422,7 @@ class Dibs extends PaymentModule
      */
     public function isConfigured()
     {
-        /** @var \Invertus\Dibs\Adapter\ConfigurationAdapter $configuration */
+        /** @var \Invertus\DibsEasy\Adapter\ConfigurationAdapter $configuration */
         $configuration = $this->get('dibs.adapter.configuration');
         $testingMode = (bool) $configuration->get('DIBS_TEST_MODE');
         $merchantId = $configuration->get('DIBS_MERCHANT_ID');

@@ -14,16 +14,16 @@
  * International Registered Trademark & Property of INVERTUS, UAB
  */
 
-namespace Invertus\Dibs\Service;
+namespace Invertus\DibsEasy\Service;
 
 use Exception;
 use GuzzleHttp\ClientInterface;
-use Invertus\Dibs\Adapter\ToolsAdapter;
+use Invertus\DibsEasy\Adapter\ToolsAdapter;
 
 /**
  * Class ApiService
  *
- * @package Invertus\Dibs\Service
+ * @package Invertus\DibsEasy\Service
  */
 class ApiRequest
 {

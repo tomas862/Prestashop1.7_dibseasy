@@ -14,16 +14,16 @@
  * International Registered Trademark & Property of INVERTUS, UAB
  */
 
-namespace Invertus\Dibs\Service;
+namespace Invertus\DibsEasy\Service;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use Invertus\Dibs\Adapter\ConfigurationAdapter;
+use Invertus\DibsEasy\Adapter\ConfigurationAdapter;
 
 /**
  * Class ClientFactory
  *
- * @package Invertus\Dibs\Service
+ * @package Invertus\DibsEasy\Service
  */
 class ClientFactory
 {

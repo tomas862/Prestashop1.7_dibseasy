@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Invertus\\Dibs\\' => array($baseDir . '/src'),
+    'Invertus\\DibsEasy\\' => array($baseDir . '/src'),
 );

@@ -15,13 +15,13 @@
 
 <div class="col-md-6">
     <ul>
-        <li>{l s='Order status' mod='dibs'}: {$currentOrderState|escape:'htmlall':'UTF-8'}</li>
+        <li>{l s='Order status' mod='dibseasy'}: {$currentOrderState|escape:'htmlall':'UTF-8'}</li>
         <li>
             <a class=""
                    href="{$orderDetailsUrl|escape:'htmlall':'UTF-8'}"
-                   title="{l s='Go to your order details page' mod='dibs'}"
+                   title="{l s='Go to your order details page' mod='dibseasy'}"
             >
-                <i class="icon-chevron-left"></i>{l s='View order details' mod='dibs'}
+                <i class="icon-chevron-left"></i>{l s='View order details' mod='dibseasy'}
             </a>
         </li>
     </ul>
