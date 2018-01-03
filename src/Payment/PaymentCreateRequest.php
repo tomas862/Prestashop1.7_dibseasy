@@ -49,6 +49,11 @@ class PaymentCreateRequest
     private $url;
 
     /**
+     * @var string Terms & Conditions URL
+     */
+    private $termsUrl;
+
+    /**
      * @var array|string[] 3-letter country codes
      */
     private $shippingCountries = [];
@@ -159,6 +164,22 @@ class PaymentCreateRequest
     }
 
     /**
+     * @return string
+     */
+    public function getTermsUrl()
+    {
+        return $this->termsUrl;
+    }
+
+    /**
+     * @param string $termsUrl
+     */
+    public function setTermsUrl($termsUrl)
+    {
+        $this->termsUrl = $termsUrl;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
@@ -174,6 +195,7 @@ class PaymentCreateRequest
             ],
             'checkout' => [
                 'url' => $this->getUrl(),
+                'termsUrl' => $this->getTermsUrl(),
             ],
         ];
 
