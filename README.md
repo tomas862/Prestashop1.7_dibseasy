@@ -5,22 +5,36 @@ for integration documentation please go to: https://tech.dibspayment.com/nodeadd
 If you have any issues please contact us [here](http://www.dibspayment.com/customer_support).
 
 Installation
+
 -You can install our Easy module for Prestashop by downloading the module here: https://github.com/DIBS-Payment-Services/Prestashop1.7_dibseasy/archive/master.zip
+
 -Extract the ZIP
+
 -Rename the folder to "dibseasy"
+
 -ZIP the module back again
+
 -Go to "Modules" - "Add a new module"
+
 -choose your module ZIP file that you want to upload and click on the upload button
+
 -Now you can configure your module with the merchant ID and keys found in your portal: https://portal.dibspayment.eu
  
 
 Configuration
+
 -Navigate to → Modules → Select your DIBS Easy Checkout module → Configure.
+
 -Merchant ID - Add your merchant ID, found in your Easy portal.
+
 -Live Secret key – Your live secret key received from DIBS.
+
 -Live Checkout key – Your live checkout key received from DIBS.
+
 -Test Secret key – your secret key for test purchases received from DIBS.
+
 -Test Checkout key – Your checkout key for test purchases received from DIBS.
+
 -Test mode – Tick the checkbox if you make purchases using the test credentials.
  
 Required Prestashop settings
