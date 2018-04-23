@@ -200,7 +200,7 @@ class PaymentCreateRequest
         ];
 
         if (count($this->shippingCountries)) {
-            $orderArray['checkout']['ShippingCountries'] = array_map(function($countryCode) {
+            $orderArray['checkout']['ShippingCountries'] = array_map(function ($countryCode) {
                 return ['countryCode' => $countryCode];
             }, $this->shippingCountries);
         }
