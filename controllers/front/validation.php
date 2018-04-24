@@ -1,7 +1,4 @@
 <?php
-
-use Invertus\DibsEasy\Result\Payment;
-
 /**
  * 2016 - 2017 Invertus, UAB
  *
@@ -16,6 +13,8 @@ use Invertus\DibsEasy\Result\Payment;
  *
  * International Registered Trademark & Property of INVERTUS, UAB
  */
+
+use Invertus\DibsEasy\Result\Payment;
 
 class DibsEasyValidationModuleFrontController extends ModuleFrontController
 {

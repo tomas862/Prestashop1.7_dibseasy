@@ -1,6 +1,4 @@
 <?php
-use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-
 /**
  * 2016 - 2017 Invertus, UAB
  *
@@ -15,6 +13,8 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
  *
  * International Registered Trademark & Property of INVERTUS, UAB
  */
+
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 
 class DibsEasyCheckoutModuleFrontController extends ModuleFrontController
 {
