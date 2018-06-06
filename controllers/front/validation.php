@@ -74,7 +74,8 @@ class DibsEasyValidationModuleFrontController extends ModuleFrontController
         // First let's check if paid amount and currency is the same as it is in cart
         $payment = $this->validateCartPayment($orderPayment->id_payment);
         if (false == $payment) {
-            $this->errors[] = $this->module->l('Payment validation has failed.', self::FILENAME);
+            $this->cancelCartPayment();
+            $this->errors[] = $this->module->l('Payment validation has failed. Payment was canceled.', self::FILENAME);
             $this->redirectWithNotifications($checkoutUrl);
         }
 
