@@ -155,7 +155,7 @@ class DibsEasy extends PaymentModule
      */
     public function hookPaymentOptions()
     {
-        if (!$this->isConfigured() || !$this->active) {
+        if (!$this->isConfigured() || !$this->active || !$this->checkCurrency($this->context->cart)) {
             return [];
         }
 
