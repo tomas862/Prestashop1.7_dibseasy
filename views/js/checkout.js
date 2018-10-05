@@ -75,7 +75,17 @@ $(document).ready(function () {
         var checkout = new Dibs.Checkout(_getCheckoutOptions());
 
         checkout.on('address-changed', function (address) {
-            //todo: implement ajax request
+            debugger;
+            checkout.freezeCheckout();
+
+            $.post(
+                dibsCheckout.assignAddressUrl,
+                {
+                    address: address,
+                    ajax: true,
+                    token: prestashop.token,
+                }
+            );
         })
     }
 

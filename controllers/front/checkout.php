@@ -93,11 +93,13 @@ class DibsEasyCheckoutModuleFrontController extends ModuleFrontController
 
         $changeDeliveryOptionUrl = $this->context->link->getModuleLink($this->module->name, 'checkout');
         $validationUrl = $this->context->link->getModuleLink($this->module->name, 'validation');
+        $assignAddressUrl = $this->context->link->getModuleLink($this->module->name, 'assignAddress');
 
         $this->jsVariables['dibsCheckout']['checkoutKey'] = $checkoutKey;
         $this->jsVariables['dibsCheckout']['language'] = $language;
         $this->jsVariables['dibsCheckout']['validationUrl'] = $validationUrl;
         $this->jsVariables['dibsCheckout']['checkoutUrl'] = $changeDeliveryOptionUrl;
+        $this->jsVariables['dibsCheckout']['assignAddressUrl'] = $assignAddressUrl;
 
         $this->registerStylesheet('dibseasy-checkout-css', 'modules/dibseasy/views/css/checkout.css');
         $this->registerJavascript('dibseasy-remote-js', $checkoutJs, ['server' => 'remote']);
