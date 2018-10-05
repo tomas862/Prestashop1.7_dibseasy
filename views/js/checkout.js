@@ -72,6 +72,7 @@ $(document).ready(function () {
      * Initialize event of address change in DIBS checkout
      */
     function initAddressChangeEvent() {
+        // todo: initialzie once only (Use as singleton)
         var checkout = new Dibs.Checkout(_getCheckoutOptions());
 
         checkout.on('address-changed', function (address) {
