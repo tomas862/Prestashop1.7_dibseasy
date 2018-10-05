@@ -15,6 +15,7 @@
 
 $(document).ready(function () {
     initCheckout();
+    initAddressChangeEvent();
     initDeliveryOptionChangeEvent();
 
     var originalDeliveryMessage = $('#delivery_message').val();
@@ -60,17 +61,35 @@ $(document).ready(function () {
      */
     function initCheckout()
     {
-        var checkoutOptions = {
-            checkoutKey: dibsCheckout.checkoutKey,
-            paymentId : dibsCheckout.paymentID,
-            containerId : "dibs-complete-checkout",
-            language: dibsCheckout.language
-        };
-
-        var checkout = new Dibs.Checkout(checkoutOptions);
+        var checkout = new Dibs.Checkout(_getCheckoutOptions());
 
         checkout.on('payment-completed', function () {
             window.location = dibsCheckout.validationUrl;
         });
+    }
+
+    /**
+     * Initialize event of address change in DIBS checkout
+     */
+    function initAddressChangeEvent() {
+        var checkout = new Dibs.Checkout(_getCheckoutOptions());
+
+        checkout.on('address-changed', function (address) {
+            //todo: implement ajax request
+        })
+    }
+
+    /**
+     * Gets checkout options required for DIBS checkout initialization
+     * @returns {{checkoutKey: string, paymentId: string, containerId: string, language: string}}
+     * @private
+     */
+    function _getCheckoutOptions() {
+        return {
+            checkoutKey: dibsCheckout.checkoutKey,
+            paymentId : dibsCheckout.paymentID,
+            containerId : "dibs-complete-checkout",
+            language: dibsCheckout.language,
+        };
     }
 });
